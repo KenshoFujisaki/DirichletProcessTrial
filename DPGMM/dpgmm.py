@@ -21,16 +21,10 @@ LOG_POSTERIOR_MIN = -1000000.0
 
 class DPGMM:
     def __init__(self):
-        # ギブスサンプリングにおけるカウンタ変数
-        self.plot_counter = 0
-        self.iter_counter = 0
-        self.number_of_clusters = 1
-        self.log_posterior = LOG_POSTERIOR_MIN
+        return
 
     # 対数基底分布(対数ガウスーウィシャート)
     def log_G0(self, mu, prec):
-        #val = self.log_normalprob(mu, mu0, cov0)
-        #val += self.log_wishartprob(prec, nu0, S0)
         val = self.log_normalprob(mu, self.mu0, np.linalg.inv(self.beta*prec))
         val += self.log_wishartprob(prec, self.nu, self.S)
         return val
@@ -55,8 +49,6 @@ class DPGMM:
         plt.axes()
         ax = plt.gca()
         for i, (mu, cov, pi, color) in enumerate(zip(self.mu, self.cov, self.pi, color_iter)):
-            #if pi < 0.01:
-            #    continue
             v, w = np.linalg.eigh(cov)
             u = w[0] / np.linalg.norm(w[0])
             angle = np.arctan(u[1] / u[0])
@@ -64,6 +56,7 @@ class DPGMM:
             ell = mpl.patches.Ellipse(mu, v[0]+2, v[1]+2, 180 + angle, color=color)
             ell.set_alpha(0.8)
             ax.add_patch(ell)
+
         filepath = "./result_%03d" % self.plot_counter
         plt.savefig(filepath)
         sys.stdout.write("\nsaved " + filepath)
@@ -110,8 +103,14 @@ class DPGMM:
         mu = [np.random.multivariate_normal(self.mu0, np.linalg.inv(cov[0] * self.beta))]
         s = np.zeros(N, dtype=np.int32)
 
+        # ギブスサンプリングにおけるカウンタ変数
+        self.plot_counter = 0
+        self.iter_counter = 0
+        self.number_of_clusters = 1
+        self.log_posterior = LOG_POSTERIOR_MIN
+
         # ギブスサンプリング
-        sys.stdout.write("Gibbs Sampling Start." + "\n")
+        sys.stdout.write("Gibbs Sampling Start.")
         log_posterior_max = LOG_POSTERIOR_MIN
         opt_s = copy.deepcopy(s)
         for iter_n in range(iter_num):
