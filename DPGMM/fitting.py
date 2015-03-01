@@ -3,13 +3,7 @@
 # original: http://nbviewer.ipython.org/github/breakbee/PyNote/blob/master/Implementation_of_DPGMM.ipynb
 # require python 3.2
 
-import itertools
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import numpy as np
 from dpgmm import *
-import functools
 import pandas
 
 # データ次元
