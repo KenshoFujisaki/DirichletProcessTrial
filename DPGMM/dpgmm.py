@@ -75,9 +75,9 @@ class DPGMM:
         #   beta: クラスタ分布の平均パラメータの分布（ガウス分布）における精度パラメータにかかるスカラ
         #   nu:   クラスタ分布の精度パラメータの分布（ウィシャート分布）における自由度パラメータ
         #   S:    クラスタ分布の精度パラメータの分布（ウィシャート分布）における共分散行列パラメータ
-        npaX = np.array(X)
-        mu_X = np.array([np.mean(npaX[:,0]), np.mean(npaX[:,1])])
-        sigma_X = np.cov(npaX, rowvar=0)
+        npa_X = np.array(X)
+        mu_X = np.array([np.mean(npa_X[:,0]), np.mean(npa_X[:,1])])
+        sigma_X = np.cov(npa_X, rowvar=0)
 
         self.mu0 = mu_X
         self.beta = 1/(gamma.pdf(1,1/d)) + (d-1)
@@ -177,10 +177,6 @@ class DPGMM:
                     cov.append(np.linalg.inv(new_prec))
 
             # 各クラスタパラメータの更新
-            mu_cs = []
-            prec_cs = []
-            nu_cs = []
-            Sq_cs = []
             for j in range(c):
                 # x_bar
                 X_k = []
@@ -208,12 +204,6 @@ class DPGMM:
                 prec_c = (c_num[j] + beta) * prec_j
                 mu_c = (c_num[j] * x_bar + beta * mu0)/(c_num[j] + beta)
                 
-                # ハイパーパラメータの格納
-                prec_cs.append(prec_c)
-                mu_cs.append(mu_c)
-                nu_cs.append(nu_j)
-                Sq_cs.append(Sq)
-
                 # クラスタパラメータの更新
                 mu[j] = mvnorm.rvs(mu_c, np.linalg.inv(prec_c))
                 cov[j] = np.linalg.inv(prec_j)

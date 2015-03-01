@@ -6,9 +6,6 @@
 from dpgmm import *
 import pandas
 
-# データ次元
-dim = 2
-
 # データのロード
 data_frame = pandas.read_csv('./old_faithful.dat')
 X = data_frame.as_matrix()
